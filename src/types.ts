@@ -14,6 +14,8 @@ export interface Scenario {
  competitionPressure: number // 0–1, hvor hård konkurrencen er om impressions
 }
 
+export type PrimaryConversion = "purchase" | "addToCart" | "pageview"
+
 export interface AccountState {
- primaryConversion: "purchase" | "addToCart" | "pageview" | null
+ primaryConversion: PrimaryConversion | null
 }
