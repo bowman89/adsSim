@@ -1,11 +1,18 @@
-import type { PerformanceData } from "../engine"
+import type { PerformanceData, SetupFeedback } from "../engine"
+
+const ratingStyles: Record<SetupFeedback["rating"], string> = {
+ good: "border-green-500 bg-green-600/15",
+ warning: "border-amber-500 bg-amber-600/15",
+ bad: "border-red-500 bg-red-600/15",
+}
 
 interface ResultsScreenProps {
  data: PerformanceData
+ feedback: SetupFeedback
  onBack: () => void
 }
 
-export function ResultsScreen({ data, onBack }: ResultsScreenProps) {
+export function ResultsScreen({ data, feedback, onBack }: ResultsScreenProps) {
  return (
   <>
    <h1 className="text-2xl font-bold">Efter {data.days} dage</h1>
@@ -42,6 +49,13 @@ export function ResultsScreen({ data, onBack }: ResultsScreenProps) {
      />
      <Metric label="Faktisk ROAS" value={data.realRoas.toString()} />
     </div>
+   </div>
+
+   <div
+    className={`mt-6 rounded-xl border p-4 ${ratingStyles[feedback.rating]}`}
+   >
+    <p className="font-semibold">{feedback.headline}</p>
+    <p className="mt-1 text-sm text-slate-300">{feedback.explanation}</p>
    </div>
 
    <button

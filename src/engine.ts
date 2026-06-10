@@ -49,3 +49,43 @@ export function simulate(
   realRoas: Math.round(realRoas * 100) / 100,
  }
 }
+
+export type Rating = "good" | "warning" | "bad"
+
+export interface SetupFeedback {
+ rating: Rating
+ headline: string
+ explanation: string
+}
+
+export function evaluateConversionChoice(account: AccountState): SetupFeedback {
+ switch (account.primaryConversion) {
+  case "purchase":
+   return {
+    rating: "good",
+    headline: "Stærkt valg",
+    explanation:
+     "Med køb som primær konvertering måler du det, der faktisk betyder noget: salg. Din ROAS er retvisende, og bruger du senere automatisk budgivning, optimerer den mod rigtige salg.",
+   }
+  case "addToCart":
+   return {
+    rating: "warning",
+    headline: "Brugbart, men pas på",
+    explanation:
+     "Kurv-handlinger sker oftere end køb, så dine konverteringstal ser bedre ud end virkeligheden. Fint som supplerende signal, men som primær konvertering risikerer du, at budgivningen jagter kurve frem for salg.",
+   }
+  case "pageview":
+   return {
+    rating: "bad",
+    headline: "Det her er en fælde",
+    explanation:
+     "Sidevisninger tæller hvert eneste klik som en 'konvertering'. Tallene eksploderer og kontoen ser fantastisk ud — men du måler reelt ingenting. Din ROAS bliver meningsløs, og automatisk budgivning vil optimere mod skrald.",
+   }
+  default:
+   return {
+    rating: "warning",
+    headline: "Intet valgt",
+    explanation: "Du har ikke valgt en primær konvertering endnu.",
+   }
+ }
+}

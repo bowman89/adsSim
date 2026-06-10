@@ -4,7 +4,7 @@ import type { AccountState, PrimaryConversion } from "./types"
 import { StartScreen } from "./screens/StartScreen"
 import { SetupScreen } from "./screens/SetupScreen"
 import { ResultsScreen } from "./screens/ResultsScreen"
-import { simulate } from "./engine"
+import { simulate, evaluateConversionChoice } from "./engine"
 
 function App() {
  const scenario = haandvaerktoejScenario
@@ -32,6 +32,7 @@ function App() {
     {screen === "results" && (
      <ResultsScreen
       data={simulate(scenario, account, 28)}
+      feedback={evaluateConversionChoice(account)}
       onBack={() => setScreen("setup")}
      />
     )}
