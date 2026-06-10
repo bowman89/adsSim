@@ -13,3 +13,7 @@ export interface Scenario {
  baseConvRate: number // andel klik der bliver til salg, fx 0.03 (= 3%)
  competitionPressure: number // 0–1, hvor hård konkurrencen er om impressions
 }
+
+export interface AccountState {
+ primaryConversion: "purchase" | "addToCart" | "pageview" | null
+}
