@@ -39,6 +39,11 @@ export function simulate(
    reportedConversions = 0
  }
 
+ // Uden Consent Mode mister du ~25% af målingerne
+ if (!account.consentMode) {
+  reportedConversions = reportedConversions * 0.75
+ }
+
  return {
   days,
   spend: Math.round(spend),
@@ -58,34 +63,53 @@ export interface SetupFeedback {
  explanation: string
 }
 
-export function evaluateConversionChoice(account: AccountState): SetupFeedback {
+export function evaluateSetup(account: AccountState): SetupFeedback[] {
+ const feedback: SetupFeedback[] = []
+
+ // Vurder konverteringsvalget
  switch (account.primaryConversion) {
   case "purchase":
-   return {
+   feedback.push({
     rating: "good",
-    headline: "Stærkt valg",
+    headline: "Stærkt konverteringsvalg",
     explanation:
-     "Med køb som primær konvertering måler du det, der faktisk betyder noget: salg. Din ROAS er retvisende, og bruger du senere automatisk budgivning, optimerer den mod rigtige salg.",
-   }
+     "Med køb som primær konvertering måler du det, der faktisk betyder noget: salg. Din ROAS er retvisende, og automatisk budgivning vil optimere mod rigtige salg.",
+   })
+   break
   case "addToCart":
-   return {
+   feedback.push({
     rating: "warning",
-    headline: "Brugbart, men pas på",
+    headline: "Kurv som konvertering — pas på",
     explanation:
-     "Kurv-handlinger sker oftere end køb, så dine konverteringstal ser bedre ud end virkeligheden. Fint som supplerende signal, men som primær konvertering risikerer du, at budgivningen jagter kurve frem for salg.",
-   }
+     "Kurv-handlinger sker oftere end køb, så dine konverteringstal ser bedre ud end virkeligheden. Som primær konvertering risikerer du, at budgivningen jagter kurve frem for salg.",
+   })
+   break
   case "pageview":
-   return {
+   feedback.push({
     rating: "bad",
-    headline: "Det her er en fælde",
+    headline: "Sidevisning er en fælde",
     explanation:
-     "Sidevisninger tæller hvert eneste klik som en 'konvertering'. Tallene eksploderer og kontoen ser fantastisk ud — men du måler reelt ingenting. Din ROAS bliver meningsløs, og automatisk budgivning vil optimere mod skrald.",
-   }
-  default:
-   return {
-    rating: "warning",
-    headline: "Intet valgt",
-    explanation: "Du har ikke valgt en primær konvertering endnu.",
-   }
+     "Sidevisninger tæller hvert klik som en 'konvertering'. Tallene eksploderer og kontoen ser fantastisk ud — men du måler reelt ingenting, og budgivningen optimerer mod skrald.",
+   })
+   break
  }
+
+ // Vurder Consent Mode
+ if (account.consentMode) {
+  feedback.push({
+   rating: "good",
+   headline: "Consent Mode er slået til",
+   explanation:
+    "Du måler korrekt, selv når brugere afviser cookies. Dine konverteringstal er ikke kunstigt lave.",
+  })
+ } else {
+  feedback.push({
+   rating: "warning",
+   headline: "Consent Mode er slået fra",
+   explanation:
+    "Du mister en del af dine målinger, når brugere afviser cookies. Dine rapporterede konverteringer er lavere end virkeligheden, hvilket kan få dig til at undervurdere kampagnerne.",
+  })
+ }
+
+ return feedback
 }

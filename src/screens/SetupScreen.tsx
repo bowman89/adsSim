@@ -21,6 +21,8 @@ const conversionOptions = [
 interface SetupScreenProps {
  selected: PrimaryConversion | null
  onSelect: (value: PrimaryConversion) => void
+ consentMode: boolean
+ onToggleConsent: () => void
  onNext: () => void
  onBack: () => void
 }
@@ -28,6 +30,8 @@ interface SetupScreenProps {
 export function SetupScreen({
  selected,
  onSelect,
+ consentMode,
+ onToggleConsent,
  onNext,
  onBack,
 }: SetupScreenProps) {
@@ -57,7 +61,27 @@ export function SetupScreen({
      )
     })}
    </div>
-
+   <button
+    onClick={onToggleConsent}
+    className={`mt-4 w-full text-left rounded-xl p-4 border transition-colors flex items-center justify-between ${
+     consentMode
+      ? "border-blue-500 bg-blue-600/20"
+      : "border-slate-600 bg-slate-700/40 hover:border-slate-500"
+    }`}
+   >
+    <span>
+     <span className="block font-semibold">Consent Mode</span>
+     <span className="block text-sm text-slate-400">
+      Måler korrekt selv når brugere afviser cookies. Glemmes den, mister du
+      målinger.
+     </span>
+    </span>
+    <span
+     className={`ml-3 font-semibold ${consentMode ? "text-blue-300" : "text-slate-500"}`}
+    >
+     {consentMode ? "TIL" : "FRA"}
+    </span>
+   </button>
    <button
     disabled={selected === null}
     onClick={onNext}

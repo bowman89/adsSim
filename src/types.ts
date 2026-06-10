@@ -19,3 +19,8 @@ export type PrimaryConversion = "purchase" | "addToCart" | "pageview"
 export interface AccountState {
  primaryConversion: PrimaryConversion | null
 }
+
+export interface AccountState {
+ primaryConversion: PrimaryConversion | null
+ consentMode: boolean
+}

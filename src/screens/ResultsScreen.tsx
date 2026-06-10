@@ -8,7 +8,7 @@ const ratingStyles: Record<SetupFeedback["rating"], string> = {
 
 interface ResultsScreenProps {
  data: PerformanceData
- feedback: SetupFeedback
+ feedback: SetupFeedback[]
  onBack: () => void
 }
 
@@ -51,12 +51,15 @@ export function ResultsScreen({ data, feedback, onBack }: ResultsScreenProps) {
     </div>
    </div>
 
-   <div
-    className={`mt-6 rounded-xl border p-4 ${ratingStyles[feedback.rating]}`}
-   >
-    <p className="font-semibold">{feedback.headline}</p>
-    <p className="mt-1 text-sm text-slate-300">{feedback.explanation}</p>
-   </div>
+   {feedback.map((item, index) => (
+    <div
+     key={index}
+     className={`mt-3 rounded-xl border p-4 ${ratingStyles[item.rating]}`}
+    >
+     <p className="font-semibold">{item.headline}</p>
+     <p className="mt-1 text-sm text-slate-300">{item.explanation}</p>
+    </div>
+   ))}
 
    <button
     onClick={onBack}

@@ -4,13 +4,14 @@ import type { AccountState, PrimaryConversion } from "./types"
 import { StartScreen } from "./screens/StartScreen"
 import { SetupScreen } from "./screens/SetupScreen"
 import { ResultsScreen } from "./screens/ResultsScreen"
-import { simulate, evaluateConversionChoice } from "./engine"
+import { simulate, evaluateSetup } from "./engine"
 
 function App() {
  const scenario = haandvaerktoejScenario
  const [screen, setScreen] = useState<"start" | "setup" | "results">("start")
  const [account, setAccount] = useState<AccountState>({
   primaryConversion: null,
+  consentMode: false,
  })
 
  return (
@@ -25,6 +26,10 @@ function App() {
       onSelect={(value: PrimaryConversion) =>
        setAccount({ ...account, primaryConversion: value })
       }
+      consentMode={account.consentMode}
+      onToggleConsent={() =>
+       setAccount({ ...account, consentMode: !account.consentMode })
+      }
       onNext={() => setScreen("results")}
       onBack={() => setScreen("start")}
      />
@@ -32,7 +37,7 @@ function App() {
     {screen === "results" && (
      <ResultsScreen
       data={simulate(scenario, account, 28)}
-      feedback={evaluateConversionChoice(account)}
+      feedback={evaluateSetup(account)}
       onBack={() => setScreen("setup")}
      />
     )}
