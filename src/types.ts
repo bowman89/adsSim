@@ -23,4 +23,23 @@ export interface AccountState {
 export interface AccountState {
  primaryConversion: PrimaryConversion | null
  consentMode: boolean
+ adGroup: AdGroup
+}
+
+export type MatchType = "broad" | "phrase" | "exact"
+
+export interface Keyword {
+ text: string
+ matchType: MatchType
+}
+
+export interface Ad {
+ headlines: string[] // korte overskrifter, max 30 tegn hver
+ descriptions: string[] // beskrivelser, max 90 tegn hver
+}
+
+export interface AdGroup {
+ name: string
+ keywords: Keyword[]
+ ad: Ad
 }
